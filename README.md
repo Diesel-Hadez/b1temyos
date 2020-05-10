@@ -16,7 +16,7 @@ Be sure to install each of the following and make sure it is available in your `
 is the recommended way to run it)
 
 Additionally, GNU Make is required as well to run the Makefile.
-You may need to `mkdir obj` first, as my `.gitignore` removed the directory for being empty.
+You may need to `mkdir obj` and `mkdir rel` first, as my `.gitignore` removed the directory for being empty.
 
 Instructions on how to get the first three programs are available on the OSDev wiki [here](https://wiki.osdev.org/GCC_Cross-Compiler)
 In short, you need to compile GNU's binutils and GCC (which includes g++ and not just gcc by the way, GCC stands for GNU Compiler Collection) 
