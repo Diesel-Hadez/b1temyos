@@ -2,7 +2,7 @@
 [Homepage](https://b1te.my/os/index.html)
 
 ## About
-A hobby operating system cobbled together from various tutorials from around the web (See: [references](references)). 
+A hobby operating system cobbled together from various tutorials from around the web (See: [references](#references)). 
 Written by [Me](https://b1te.my).
 
 ## Dependencies
@@ -16,6 +16,7 @@ Be sure to install each of the following and make sure it is available in your `
 is the recommended way to run it)
 
 Additionally, GNU Make is required as well to run the Makefile.
+You may need to `mkdir obj` first, as my `.gitignore` removed the directory for being empty.
 
 Instructions on how to get the first three programs are available on the OSDev wiki [here](https://wiki.osdev.org/GCC_Cross-Compiler)
 In short, you need to compile GNU's binutils and GCC (which includes g++ and not just gcc by the way, GCC stands for GNU Compiler Collection) 
@@ -38,12 +39,12 @@ For Arch Linux and Arch-based distros, you can simply install these packages fro
 - `i686-elf-binutils`
 
 ## Installation
-Once you have satisfied the [Dependencies](dependencies), git clone this repo, cd into the root directory, and run `make all`, or
+Once you have satisfied the [Dependencies](#dependencies), git clone this repo, cd into the root directory, and run `make all`, or
 `make run` to run with qemu. The resulting raw image of the OS will be in the `rel/` directory.
 
 ## FAQ
-- [Various Makefile Questions](makefile-questions)
-- [Misc. Questions](misc-questions)
+- [Various Makefile Questions](#makefile-questions)
+- [Misc. Questions](#misc-questions)
 
 ### Makefile Questions
 #### Why don't you use wildcards or pattern rules in your Makefile?
@@ -129,7 +130,7 @@ end up with an old way of reading data from a disk, which would be slow, but I'm
 
 #### License?
 I currently have no license attached, which means I hold the copyright. Nonetheless, I am planning to add a permissive open-source license
-in the future which just needs to credit me in some form. In the mean time, try go through some of the excellent [resources](references) below,
+in the future which just needs to credit me in some form. In the mean time, try go through some of the excellent [resources](#references) below,
 which is a lot more useful than this project in its current form.
 
 #### Why the name?
@@ -151,7 +152,7 @@ I would not be able to test any A20 line setting code without recompiling SeaBIO
 refactor once a working heap is implemented, since , for example, I cannot do some things such as returning a pointer in a function
 since I would need it to be allocated on the heap.
 
-- **Re-initialise GDT** - See any one of the tutorials linked in the [references](references) section. Despite being initialised in
+- **Re-initialise GDT** - See any one of the tutorials linked in the [references](#references) section. Despite being initialised in
 the bootloader, as far as I can tell the GDT _might_ still need to be reloaded. If instead GRUB was used instead of our own bootloader,
 the memory address of the GDT is unknown (and even if it was, I supposed it might not be reliable and could be changed in different GRUB
 versions), and thus the GDT would **have** to be re-initialised with a new known memory address. Since here our own custom bootloader
@@ -163,7 +164,7 @@ segments for User Mode Code and User Mode Data as per James M's tutorials.
 - **Keyboard** - Actually this is technically part of IRQ.
 - **Paging** - Again just follow a tutorial, and cross-reference with other tutorials/Known Bugs as well.
 
-- **ATA Driver** - This is the difficult one. Try looking either at the skelix tutorial or youtube tutorial mentioned in the [references](references). Also of interest is [OSDev's article on ATA PIO Mode](https://wiki.osdev.org/ATA_PIO_Mode) and [this forum thread](https://forum.osdev.org/viewtopic.php?t=12268) linked in the aforementioned article, which uses 28 bit PIO but 48 bit PIO using the article as reference shouldn't
+- **ATA Driver** - This is the difficult one. Try looking either at the skelix tutorial or youtube tutorial mentioned in the [references](#references). Also of interest is [OSDev's article on ATA PIO Mode](https://wiki.osdev.org/ATA_PIO_Mode) and [this forum thread](https://forum.osdev.org/viewtopic.php?t=12268) linked in the aforementioned article, which uses 28 bit PIO but 48 bit PIO using the article as reference shouldn't
 be too hard to adapt to. This is, by the way, the answer to the second-last reply of the thread. I would be satisfied with just being
 able to read/write sectors. A filesystem like ext4/ext2/FAT32/FAT16/etc could be implemented later on. 
 I would also be satisfied even if reading speeds are slow, which I suspect may be the case, as I suspect PIO mode to be a legacy feature.
@@ -177,7 +178,7 @@ Interestingly, it may seem that I would have to slightly rewrite my bootloader- 
 be a better idea to code it in assembly, and link it to the C++ code. One potential problem with this is that I want inb/outb to be part
 of a namespace for organisation purposes, which I think is possible but a bit of research would need to be done first.
 
-- **C++ Fixing** - See [OSDev's article on C++](https://wiki.osdev.org/C%2B%2B) and [OSDev's article on Calling Global Constructors](https://wiki.osdev.org/Calling_Global_Constructors) as well as [OSDev's article on C optimisations](https://wiki.osdev.org/C#Things_you_should_know_about_optimizations), the latter which also applies to C++. Another forum thread regarding C++ can be found [here](https://forum.osdev.org/viewtopic.php?f=1&t=29216&start=0). Additionally, the youtube series in the [references](references) may be of help; looking at his `linker.ld` 
+- **C++ Fixing** - See [OSDev's article on C++](https://wiki.osdev.org/C%2B%2B) and [OSDev's article on Calling Global Constructors](https://wiki.osdev.org/Calling_Global_Constructors) as well as [OSDev's article on C optimisations](https://wiki.osdev.org/C#Things_you_should_know_about_optimizations), the latter which also applies to C++. Another forum thread regarding C++ can be found [here](https://forum.osdev.org/viewtopic.php?f=1&t=29216&start=0). Additionally, the youtube series in the [references](#references) may be of help; looking at his `linker.ld` 
 and `kernel.cpp`, he seems to have `.init_array` as a list of constructors, and has `start_ctors` and `end_ctors` as the index of the 
 beginning and end of this list respectively. These are then called in a function in `kernel.cpp`, which itself is called by `loader.s` 
 manually. There does _not_ seem to exist any similar functionality for destructors, and furthermore, I _suspect_ that the constructors to 
@@ -202,7 +203,7 @@ Some features I consider too optimistic or do not nearly know enough about, but 
 - DMA - Use for access for moving large amounts of memory. I also suspect this may be key in faster hard drive reading/writing?
 - GUI/Graphics - Unlike others in this list, I actually think I am currently capable of doing this if I get Graphics done, but simply choose not to
 - Networking - Hah I seriously doubt I'll get to this. Nonetheless, if an ambitious reader (or an ambitious future-me) would like to attempt 
-this, perhaps using the Ethernet port would be a good start, and besides the osdev wiki there is Viktor's Youtube series linked in [references](references)
+this, perhaps using the Ethernet port would be a good start, and besides the osdev wiki there is Viktor's Youtube series linked in [references](#references)
 - ELF file execution - I would need to get paging and filesystems working first. Perhaps a precursor to this could be a readelf type program.
 To do this, maybe implement a custom syscall for executing a file.
 - A good Heap implementation - Although James M's tutorial covers this, the wiki states it is not a terribly good solution and suggests
@@ -259,22 +260,20 @@ nice resource, and perhaps this was a one-off mistake, or I am mistaken entirely
 there are sometimes good explanations in comments, if you can find them.
 
 ### Others
-Additionally, although I personally have not read it due to its high cost, I have heard good things about this book and it is cited as
-the natural next-step after reading the book by Dr Nicholas Blundell above. The book's title is `Operating Systems Design and Implementation (3rd Edition) - Andrew S Tanenbaum, Albert S Woodhull`
-
-[Operating Systems: From 0 to 1](https://github.com/tuhdo/os01) is incomplete, but the explanations of the low-level way the actual
+- Additionally, although I personally have not read it due to its high cost, I have heard good things about this book and it is cited as the natural next-step after reading the book by Dr Nicholas Blundell above. The book's title is `Operating Systems Design and Implementation (3rd Edition) - Andrew S Tanenbaum, Albert S Woodhull`
+- [Operating Systems: From 0 to 1](https://github.com/tuhdo/os01) is incomplete, but the explanations of the low-level way the actual
 circuitry in a computer works is interesting and may help in understanding certain OSDev concepts. If you are more of a hardware person
 by the way, check out [Ben Eater](https://www.youtube.com/user/eaterbc) on youtube if you haven't already, or the [Lessons in Electric Circuits](https://www.allaboutcircuits.com/textbook/) which the book suggests to read if you don't know much about electric circuits.
-[cfenollosa's os-tutorial](https://github.com/cfenollosa/os-tutorial) Incomplete, but could be useful. For example, this is where I found
+- [cfenollosa's os-tutorial](https://github.com/cfenollosa/os-tutorial) Incomplete, but could be useful. For example, this is where I found
 out about qemu's debugging interface (in the Makefile) and it was very thoughtful of the author to include "keywords" of concepts 
 in each chapter so that the reader would know what to search for for research. ("for for" is intentional and I _think_ grammatically correct)
-[samypesse how-to-create-an-os](https://samypesse.gitbook.io/how-to-create-an-operating-system/chapter-6) could be useful.
-[Independent Software](http://www.independent-software.com/operating-system-development.html) - Haven't looked too much into this, it sticks
+- [samypesse how-to-create-an-os](https://samypesse.gitbook.io/how-to-create-an-operating-system/chapter-6) could be useful.
+- [Independent Software](http://www.independent-software.com/operating-system-development.html) - Haven't looked too much into this, it sticks
 out to me particularly because it seems to have a chapter on the A20 line.
-[Early versions of ToaruOS](https://github.com/klange/toaruos/commits/master?after=571cda2928ef335af3418c77280dbf8c91f1f573+4568) Fun fact: I
+- [Early versions of ToaruOS](https://github.com/klange/toaruos/commits/master?after=571cda2928ef335af3418c77280dbf8c91f1f573+4568) Fun fact: I
 first found out about this OS through its off-spring PonyOS. I am not entirely sure, but I think PonyOS was the first OS I found out
 about years ago which wasn't mainstream, and what got me interested in OS Development. Note that you shouldn't copy code from there, just see how things are implemented, because its license requires an acknowledgement, which I would rather not have; Besides, copying code is not fun.
-[Pdoane's OS Source Code](https://github.com/pdoane/osdev/) - It's meant to target a 64 bit machine rather than my 32 bit (i686), but it's a
+- [Pdoane's OS Source Code](https://github.com/pdoane/osdev/) - It's meant to target a 64 bit machine rather than my 32 bit (i686), but it's a
 really easy to understand and read OS.
-[Raspberry Pi OS](https://github.com/s-matyukevich/raspberry-pi-os) - Actually seems like a really good guide to OSDev, although it is
+- [Raspberry Pi OS](https://github.com/s-matyukevich/raspberry-pi-os) - Actually seems like a really good guide to OSDev, although it is
 incomplete and doesn't have a tutorial on reading sectors for the SD Card or a flash drive.
