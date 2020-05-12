@@ -11,6 +11,7 @@ Be sure to install each of the following and make sure it is available in your `
 - `i686-elf-gcc`
 - `i686-elf-ld`
 - `qemu-system-i386`
+- `nasm`
 
 (Note that qemu isn't technically required if you do not wish to run the OS, or have some alternative way of running it, but using qemu
 is the recommended way to run it)
@@ -33,10 +34,11 @@ have additional packages with different names for specific targets of qemu. For 
 and one must instead install the `qemu-system-x86` package. The reason the cross-compilers are less likely to be in these package managers
 is because they are not used by many people, and so maintainers may find it a waste of time regularly updating those builds.
 
-For Arch Linux and Arch-based distros, you can simply install these packages from the AUR :-
+For Arch Linux and Arch-based distros, you can simply install these packages from the AUR (i686-elf-gcc and i686-elf-binutils) and 'extra' repositories (qemu and nasm) :-
 - `qemu-arch-extra`
 - `i686-elf-gcc`
 - `i686-elf-binutils`
+- `nasm`
 
 ## Installation
 Once you have satisfied the [Dependencies](#dependencies), git clone this repo, cd into the root directory, and run `make all`, or
@@ -112,6 +114,10 @@ this project "complete", and I would consider any additional commits thereafter 
 #### Why not use a linker file (an LD file) instead of passing `-Ttext 0x1000` in the command line when linking?
 Planning on doing this. Also, it is said in the OSDev wiki (Bare Bones tutorial) that 
 using i686-elf-g++ as a linker would also be a better idea.
+
+#### Why not use `i686-elf-as` instead of `nasm`?
+I find the NASM syntax to be a bit clearer, even with AS's `.intel_syntax` option. Regardless, since they (AS and G++)are both GCC,
+there might be better integration, so if the situation arises where it would be easier to use AS I might switch to it in the future.
 
 #### Why not use C instead of C++?
 I'm more comfortable with C++ than C and enjoy its object-oriented capabilities (though I do not overuse them to the point of using
@@ -243,7 +249,7 @@ following, also note that some of these tutorials have pages in the OSdev wiki d
 	- [Writing an Operating System - From Scratch by Dr Nicholas Blundell](https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf) - Incomplete but extremely well-written. An excellent start to writing a bootloader.
 	- [James A Molloy's Kernel Tutorials](http://jamesmolloy.co.uk/tutorial_html/) | [Known Bugs](https://wiki.osdev.org/James_Molloy%27s_Tutorial_Known_Bugs)
 	- [BrokenThorn Operating System Development Series](http://www.brokenthorn.com/Resources/OSDevIndex.html) | [Known Bugs](https://wiki.osdev.org/Brokenthorn%27s_Known_Bugs)
-	- [Bran's Kernel Tutorial](http://www.brokenthorn.com/Resources/OSDevIndex.html) | [Known Bugs](https://wiki.osdev.org/Bran%27s_Known_Bugs)
+	- [Bran's Kernel Tutorial](http://www.osdever.net/bkerndev/Docs/title.htm) | [Known Bugs](https://wiki.osdev.org/Bran%27s_Known_Bugs)
 - [Writing an OS in Rust](https://os.phil-opp.com/) despite being in Rust and being incomplete as of time of writing, this still is an invaluable resource, and also is probably the most up-to-date tutorial on Operating Systems there is available for free online.
 - [Skelix OS](http://skelix.net/skelixos/index_en.html) In particular tutorial 7 regarding hard drive access seems useful. Found this 
 through early commits of toaruos linking this as a reference tutorial.

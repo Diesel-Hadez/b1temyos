@@ -33,19 +33,24 @@ KERNEL_HEADERS	= ports.h
 
 obj/kernel.bin: $(addprefix $(OBJ_PATH), kernel_entry.elf)\
        	$(addprefix $(OBJ_PATH), $(KERNEL_FILES:.cpp=.elf))
+	mkdir -p obj
 	$(LD) -o obj/kernel.bin -Ttext $(PROT_ENTRY) $^ --oformat binary -e kernel_main
 
 obj/%.elf: src/kernel/%.cpp
+	mkdir -p obj
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) -MMD
 
 obj/kernel_entry.elf: src/kernel/kernel_entry.asm
+	mkdir -p obj
 	$(NASM) $< -f elf -o $@
 
 #Overrides obj/%.bin
 obj/boot_sect.bin: $(addprefix $(BOOT_PATH), $(BOOT_FILES))
+	mkdir -p obj
 	$(NASM) -I src/boot $< -f bin -o $@
 
 rel/os-image.bin: obj/boot_sect.bin obj/kernel.bin
+	mkdir -p rel
 #Concatenate the files into one raw image
 	cat $^ > $@
 #Qemu needs raw images (except for if=floppy) to be at least 32 sectors large
