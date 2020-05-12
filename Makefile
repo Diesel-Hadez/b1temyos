@@ -20,7 +20,8 @@ BOOT_FILES	= boot.asm\
 		  screen_utils_pmode.asm
 
 KERNEL_FILES	= kernel_main.cpp\
-		  ports.cpp
+		  ports.cpp\
+		  utils.cpp
 
 DEPS		= $(KERNEL_FILES:%.cpp=$(OBJ_PATH)/%.d)
 KERNEL_HEADERS	= ports.h
