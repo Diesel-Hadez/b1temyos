@@ -6,9 +6,6 @@ QEMU	= qemu-system-i386
 
 CXX_FLAGS	= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 
-#Protected Mode Entrypoint
-PROT_ENTRY	= 0x1000
-
 KERNEL_PATH	= src/kernel/
 BOOT_PATH	= src/boot/
 OBJ_PATH	= obj/
@@ -34,7 +31,7 @@ KERNEL_HEADERS	= ports.h
 obj/kernel.bin: $(addprefix $(OBJ_PATH), kernel_entry.elf)\
        	$(addprefix $(OBJ_PATH), $(KERNEL_FILES:.cpp=.elf))
 	mkdir -p obj
-	$(LD) -o obj/kernel.bin -Ttext $(PROT_ENTRY) $^ --oformat binary -e kernel_main
+	$(CXX) -T linker.ld -ffreestanding -O2 -nostdlib -lgcc $^
 
 obj/%.elf: src/kernel/%.cpp
 	mkdir -p obj

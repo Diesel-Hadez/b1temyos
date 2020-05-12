@@ -111,10 +111,6 @@ In many ways, my goals are similar to that of a [Lino Commmando](https://wiki.os
 write my own bootloader instead of utilising GRUB, my goals are exactly that of Lino Commando. Getting this far is when I would consider
 this project "complete", and I would consider any additional commits thereafter more of an experiment rather than further development.
 
-#### Why not use a linker file (an LD file) instead of passing `-Ttext 0x1000` in the command line when linking?
-Planning on doing this. Also, it is said in the OSDev wiki (Bare Bones tutorial) that 
-using i686-elf-g++ as a linker would also be a better idea.
-
 #### Why not use `i686-elf-as` instead of `nasm`?
 I find the NASM syntax to be a bit clearer, even with AS's `.intel_syntax` option. Regardless, since they (AS and G++)are both GCC,
 there might be better integration, so if the situation arises where it would be easier to use AS I might switch to it in the future.
@@ -177,8 +173,6 @@ I would also be satisfied even if reading speeds are slow, which I suspect may b
 
 - **FAT12 Driver** - See: [Wikipedia](https://en.wikipedia.org/wiki/Design_of_the_FAT_file_system), and search elsewhere as well. 
 Interestingly, it may seem that I would have to slightly rewrite my bootloader- though I still have space so that should hopefully not be a problem, else I could split my bootloader into two separate stages.
-
-- **Use a linker file (linker.ld)** - Do this instead of passing `-Ttext 0x1000` in command line as well as using i686-elf-g++ as a linker
 
 - **Port IO Assembly Code** - Currently I use inline assembly from the Developing an Operating System From Scratch book. I wonder if it would
 be a better idea to code it in assembly, and link it to the C++ code. One potential problem with this is that I want inb/outb to be part
