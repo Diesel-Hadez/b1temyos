@@ -178,13 +178,13 @@ Interestingly, it may seem that I would have to slightly rewrite my bootloader- 
 be a better idea to code it in assembly, and link it to the C++ code. One potential problem with this is that I want inb/outb to be part
 of a namespace for organisation purposes, which I think is possible but a bit of research would need to be done first.
 
-- **C++ Fixing** - See [OSDev's article on C++](https://wiki.osdev.org/C%2B%2B) and [OSDev's article on Calling Global Constructors](https://wiki.osdev.org/Calling_Global_Constructors) as well as [OSDev's article on C optimisations](https://wiki.osdev.org/C#Things_you_should_know_about_optimizations), the latter which also applies to C++. Another forum thread regarding C++ can be found [here](https://forum.osdev.org/viewtopic.php?f=1&t=29216&start=0). Additionally, the youtube series in the [references](#references) may be of help; looking at his `linker.ld` 
+- ~~**C++ Fixing**~~ - UPDATE: I have since implemented calling global constructors/destructors, but I think there is still much to be done. For example, I stumbled upon a problem of the C++ Compiler needing the atexit() function for Singletons, so be aware of this. ~~See [OSDev's article on C++](https://wiki.osdev.org/C%2B%2B) and [OSDev's article on Calling Global Constructors](https://wiki.osdev.org/Calling_Global_Constructors) as well as [OSDev's article on C optimisations](https://wiki.osdev.org/C#Things_you_should_know_about_optimizations), the latter which also applies to C++. Another forum thread regarding C++ can be found [here](https://forum.osdev.org/viewtopic.php?f=1&t=29216&start=0). Additionally, the youtube series in the [references](#references) may be of help; looking at his `linker.ld` 
 and `kernel.cpp`, he seems to have `.init_array` as a list of constructors, and has `start_ctors` and `end_ctors` as the index of the 
 beginning and end of this list respectively. These are then called in a function in `kernel.cpp`, which itself is called by `loader.s` 
 manually. There does _not_ seem to exist any similar functionality for destructors, and furthermore, I _suspect_ that the constructors to 
 be called are locked in to being a type where it does not accept any parameters because of the typedef of the function pointer in 
 `kernel.cpp` being of a type `void()`. Try follow the OSDev's wiki article on calling Global Objects and do some tests with classes 
-and constructors/destructors to see if that works first.
+and constructors/destructors to see if that works first.~~
 
 - **Debugging interface** - See [here](https://github.com/cfenollosa/os-tutorial/blob/master/22-malloc/Makefile)
 

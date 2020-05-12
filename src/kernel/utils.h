@@ -3,6 +3,10 @@
 
 namespace os{
 	namespace util{
+		void hex_to_str(const unsigned int num, char * ret);
+		bool test_a20_enabled();
+		void fast_enable_a20();
+		void kprint(const char * text);
 		void memcpy(unsigned char * data, 
 				const unsigned char * src,
 				unsigned int count);

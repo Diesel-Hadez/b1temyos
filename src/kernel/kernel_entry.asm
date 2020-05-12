@@ -1,5 +1,7 @@
 [bits 32]
 [extern kernel_main]
+[extern _init]
+[extern _fini]
 [global _start]
 
 section .bss
@@ -12,6 +14,10 @@ section .text
 _start:
 	mov esp, stack_top
 	mov ebp, esp
+	call _init
 	call kernel_main
+	call _fini
+	cli
+	hlt
 	jmp $
 .end:

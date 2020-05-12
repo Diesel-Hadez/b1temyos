@@ -4,7 +4,7 @@ LD	= i686-elf-ld
 NASM	= nasm
 QEMU	= qemu-system-i386
 
-CXX_FLAGS	= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+CXX_FLAGS	= -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -fno-threadsafe-statics -fno-use-cxa-atexit
 
 KERNEL_PATH	= src/kernel/
 BOOT_PATH	= src/boot/
@@ -21,22 +21,41 @@ BOOT_FILES	= boot.asm\
 
 KERNEL_FILES	= kernel_main.cpp\
 		  ports.cpp\
-		  utils.cpp
+		  utils.cpp\
+		  gdt.cpp
 
 DEPS		= $(KERNEL_FILES:%.cpp=$(OBJ_PATH)/%.d)
-KERNEL_HEADERS	= ports.h
+KERNEL_HEADERS	= ports.h utils.h common.h
 
+CRTBEGIN_OBJ 	= $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
+CRTEND_OBJ 	= $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)
+
+CRTI_OBJ 	= crti.o
+CRTN_OBJ 	= crtn.o
+
+LINK_OBJS	= $(addprefix $(OBJ_PATH), kernel_entry.elf)\
+	$(addprefix $(OBJ_PATH), $(CRTI_OBJ)) $(CRTBEGIN_OBJ)\
+       	$(addprefix $(OBJ_PATH), $(KERNEL_FILES:.cpp=.elf))\
+	$(CRTEND_OBJ)\
+	$(addprefix $(OBJ_PATH), $(CRTN_OBJ)) 
 
 -include $(DEPS)
 
-obj/kernel.bin: $(addprefix $(OBJ_PATH), kernel_entry.elf)\
-       	$(addprefix $(OBJ_PATH), $(KERNEL_FILES:.cpp=.elf))
+obj/kernel.bin: $(LINK_OBJS) 
 	mkdir -p obj
 	$(CXX) -T linker.ld -ffreestanding -O2 -nostdlib -lgcc $^
 
 obj/%.elf: src/kernel/%.cpp
 	mkdir -p obj
 	$(CXX) -o $@ -c $< $(CXX_FLAGS) -MMD
+
+obj/crti.o: src/kernel/crti.asm
+	mkdir -p obj
+	$(NASM) $< -f elf -o $@
+
+obj/crtn.o: src/kernel/crtn.asm
+	mkdir -p obj
+	$(NASM) $< -f elf -o $@
 
 obj/kernel_entry.elf: src/kernel/kernel_entry.asm
 	mkdir -p obj
