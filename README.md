@@ -277,3 +277,4 @@ about years ago which wasn't mainstream, and what got me interested in OS Develo
 really easy to understand and read OS.
 - [Raspberry Pi OS](https://github.com/s-matyukevich/raspberry-pi-os) - Actually seems like a really good guide to OSDev, although it is
 incomplete and doesn't have a tutorial on reading sectors for the SD Card or a flash drive.
+- [VGA Hardware](http://www.osdever.net/FreeVGA/vga/vgareg.htm) Some info about the VGA Hardware

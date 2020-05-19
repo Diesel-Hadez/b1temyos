@@ -2,40 +2,60 @@
 #include "common.h"
 #include "ports.h"
 
-//Quick and dirty kprint for starting. Will replace later.
-void os::util::kprint(const char * text) {
-	static byte * video_memory = (byte*) VIDEO_MEMORY;
-	static unsigned int counter = 0;
-	unsigned int index = 0;
-	char a = text[index];
-	while (a != 0) {
-		video_memory[counter++] = a;
-		//White on Black
-		video_memory[counter++] = 0x0f;
-		a = text[++index];
+//Don't have a heap yet, so I can't return a char*
+//Because if I do, it would be a local variable for the function
+//on the stack which is removed when the function returns.
+//Be sure that ret has space for 10 bytes, plus the NULL Terminator
+//So...11 bytes
+void os::util::hex_to_str(const unsigned int num, char * ret, const bool trim) {
+	static const char *  HEX_REF = "0123456789ABCDEF";
+	os::util::memset(reinterpret_cast<byte *>(ret), 0, 11);
+	os::util::memset(reinterpret_cast<byte *>(ret), '0', 10);
+	ret[0] = '0';
+	ret[1] = 'x';
+	unsigned int write_pos = 2;
+	for (int i=7; i >= 0;i--){
+		char result = HEX_REF[(num >> (4*i)) & 0xF];
+		if (trim && 
+			result == '0'){
+			continue;
+		}
+		ret[write_pos++]= result; 
 	}
+	ret[write_pos] = '\x00';
+}
+
+unsigned int os::util::pow(const unsigned int num, const unsigned int pow) {
+	unsigned int ret = 1;
+	for (unsigned int i=0; i<pow;i++){
+		ret *= num;
+	}
+	return ret;
 }
 
 //Don't have a heap yet, so I can't return a char*
 //Because if I do, it would be a local variable for the function
 //on the stack which is removed when the function returns.
 //Be sure that ret has space for 10 bytes, plus the NULL Terminator
-void os::util::hex_to_str(const unsigned int num, char * ret) {
-	static const char *  HEX_REF = "0123456789ABCDEF";
-	ret[0] = '0';
-	ret[1] = 'x';
-
-	ret[2] = HEX_REF[num & 0xF];
-	ret[3] = HEX_REF[(num >> 4) & 0xF];
-	ret[4] = HEX_REF[(num >> 8) & 0xF];
-	ret[5] = HEX_REF[(num >> 12) & 0xF];
-	ret[6] = HEX_REF[(num >> 16) & 0xF];
-	ret[7] = HEX_REF[(num >> 20) & 0xF];
-	ret[8] = HEX_REF[(num >> 24) & 0xF];
-	ret[9] = HEX_REF[(num >> 28) & 0xF];
-	ret[10] = '\x00';
+//So...11 bytes
+void os::util::int_to_str(const unsigned int num, char * ret, const bool trim) {
+	static const char * INT_REF	= "0123456789";
+	os::util::memset(reinterpret_cast<byte *>(ret), 0, 11);
+	os::util::memset(reinterpret_cast<byte *>(ret), '-', 10);
+	unsigned int write_pos=0;
+	for (int i =0; i <= 9; i++) {
+		unsigned int left 	= os::util::pow(10, 10-i);
+		unsigned int right 	= os::util::pow(10, 9-i);
+		unsigned int index 	= ((num % left) - (num % right))/right;
+		if (trim &&
+			num <= right){
+			continue;
+		}
+		ret[write_pos++] = INT_REF[index];
+	}
+	//Null terminate
+	ret[write_pos] = '\x00';
 }
-
 bool os::util::test_a20_enabled() {
 	static byte * test_memory_1 = (byte*) 0x12345;
 	static byte * test_memory_2 = (byte*) (0x12345 | 0x100000);
@@ -48,7 +68,9 @@ bool os::util::test_a20_enabled() {
 
 //Unable to test this
 void os::util::fast_enable_a20() {
-	byte a20 = os::port::in_byte(0x92);
+	using namespace os::port;
+	unsigned char a20 = in_byte(TYPE::FAST_A20);
+	//Set 2nd bit (so OR with 0b10 or 2^1)
 	a20 |= 2;
 	os::port::out_byte(0x92, a20);
 }

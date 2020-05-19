@@ -24,7 +24,7 @@ load_kernel:
 	; so ES:BX is 0x0000:0x1000
 	mov bx, 0x1000
 	mov dl, [BOOT_DRIVE]
-	mov dh, 15		; 15 sectors I guess, gives us 15*512 bytes of code to work with
+	mov dh, 25		; 25 sectors I guess, gives us 25*512 bytes of code to work with
 	call disk_load
 	ret
 
