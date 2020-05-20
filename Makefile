@@ -11,7 +11,7 @@ KERNEL_PATH	= src/kernel/
 BOOT_PATH	= src/boot/
 OBJ_PATH	= obj/
 
-#Note that boot.asm has to be the first
+# Note that boot.asm has to be the first
 BOOT_FILES	= boot.asm\
 		  disk_utils.asm\
 		  gdt.asm\
@@ -24,12 +24,18 @@ KERNEL_CPP_FILES= kernel_main.cpp\
 		  ports.cpp\
 		  utils.cpp\
 		  terminal.cpp\
-		  gdt.cpp
+		  gdt.cpp\
+		  idt.cpp\
+		  isr.cpp
 
-KERNEL_ASM_FILES= gdt_flush.asm
+KERNEL_ASM_FILES= gdt_flush.asm\
+		  idt_flush.asm\
+		  isr_asm.asm
 
 DEPS		= $(KERNEL_CPP_FILES:%.cpp=$(OBJ_PATH)/%.d)
-KERNEL_HEADERS	= ports.h utils.h common.h gdt.h terminal.h
+
+# Completely useless. I don't know why I keep this
+KERNEL_HEADERS	= ports.h utils.h common.h gdt.h terminal.h idt.h
 
 CRTBEGIN_OBJ 	= $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ 	= $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtend.o)

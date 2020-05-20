@@ -1,6 +1,7 @@
 #include "ports.h"
 #include "utils.h"
 #include "gdt.h"
+#include "idt.h"
 #include "terminal.h"
 
 typedef void (*Destructor)();
@@ -19,8 +20,11 @@ int atexit(Destructor d){
 extern "C"
 void kernel_main(){
 	os::GDT::Init();
+	os::IDT::Init();
 	os::Term::ClearScreen();
-	os::Term::kprintf("%s has jumped %d times (In hex, that's %x times)", "James", 296, 296);
+	os::Term::kprintf("%s has jumped %d times (In hex, that's %x times)\n", "James", 296, 296);
+	asm volatile ("int $0x3");
+	asm volatile ("int $0x4");
 
 	for (unsigned int i=0; i < num_destructors; i++) {
 		destructors[i]();
