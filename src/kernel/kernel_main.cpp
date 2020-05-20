@@ -18,7 +18,7 @@ int atexit(Destructor d){
 
 extern "C"
 void kernel_main(){
-	os::GDT::get().Init();
+	os::GDT::Init();
 	os::Term::ClearScreen();
 	os::Term::kprintf("%s has jumped %d times (In hex, that's %x times)", "James", 296, 296);
 

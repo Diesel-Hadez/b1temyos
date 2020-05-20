@@ -20,13 +20,15 @@ BOOT_FILES	= boot.asm\
 		  screen_utils.asm\
 		  screen_utils_pmode.asm
 
-KERNEL_FILES	= kernel_main.cpp\
+KERNEL_CPP_FILES= kernel_main.cpp\
 		  ports.cpp\
 		  utils.cpp\
 		  terminal.cpp\
 		  gdt.cpp
 
-DEPS		= $(KERNEL_FILES:%.cpp=$(OBJ_PATH)/%.d)
+KERNEL_ASM_FILES= gdt_flush.asm
+
+DEPS		= $(KERNEL_CPP_FILES:%.cpp=$(OBJ_PATH)/%.d)
 KERNEL_HEADERS	= ports.h utils.h common.h gdt.h terminal.h
 
 CRTBEGIN_OBJ 	= $(shell $(CXX) $(CXXFLAGS) -print-file-name=crtbegin.o)
@@ -37,7 +39,8 @@ CRTN_OBJ 	= crtn.o
 
 LINK_OBJS	= $(addprefix $(OBJ_PATH), kernel_entry.elf)\
 	$(addprefix $(OBJ_PATH), $(CRTI_OBJ)) $(CRTBEGIN_OBJ)\
-       	$(addprefix $(OBJ_PATH), $(KERNEL_FILES:.cpp=.elf))\
+       	$(addprefix $(OBJ_PATH), $(KERNEL_CPP_FILES:.cpp=.elf))\
+       	$(addprefix $(OBJ_PATH), $(KERNEL_ASM_FILES:.asm=.elf))\
 	$(CRTEND_OBJ)\
 	$(addprefix $(OBJ_PATH), $(CRTN_OBJ)) 
 
@@ -56,6 +59,10 @@ obj/crti.o: src/kernel/crti.asm
 	$(NASM) $< -f elf -o $@
 
 obj/crtn.o: src/kernel/crtn.asm
+	-@mkdir -p obj
+	$(NASM) $< -f elf -o $@
+
+obj/%.elf: src/kernel/%.asm
 	-@mkdir -p obj
 	$(NASM) $< -f elf -o $@
 

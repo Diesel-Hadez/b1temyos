@@ -1,21 +1,25 @@
 #ifndef GDT_H
 #define GDT_H
+#include <stdint.h>
 
 namespace os
 {
-	class GDT {
-		private:
-			GDT();
-			~GDT();
-		public:
-			//TO-DO, move Init to constructor once
-			//constructors are working 
-			void Init();
-			static GDT& get(){
-				static os::GDT instance;
-				return instance;
-			};
-	};
+	namespace GDT {
+		struct Entry{
+			uint16_t limit_low;
+			uint16_t base_low;	
+			uint8_t base_middle;
+			uint8_t access;
+			uint8_t granularity;
+			uint8_t base_high;
+		} __attribute__((packed));
+
+		struct Ptr{
+			uint16_t limit;
+			uint32_t base;
+		} __attribute__((packed));
+		void Init();
+	}
 }
 
 #endif

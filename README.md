@@ -154,12 +154,12 @@ I would not be able to test any A20 line setting code without recompiling SeaBIO
 refactor once a working heap is implemented, since , for example, I cannot do some things such as returning a pointer in a function
 since I would need it to be allocated on the heap.
 
-- **Re-initialise GDT** - See any one of the tutorials linked in the [references](#references) section. Despite being initialised in
+- Done ~~**Re-initialise GDT**~~ - See any one of the tutorials linked in the [references](#references) section. Despite being initialised in
 the bootloader, as far as I can tell the GDT _might_ still need to be reloaded. If instead GRUB was used instead of our own bootloader,
 the memory address of the GDT is unknown (and even if it was, I supposed it might not be reliable and could be changed in different GRUB
 versions), and thus the GDT would **have** to be re-initialised with a new known memory address. Since here our own custom bootloader
 is being used, this may very well not be needed, though I am unsure about that. In any case, you might want to set two more additional
-segments for User Mode Code and User Mode Data as per James M's tutorials.
+segments for User Mode Code and User Mode Data as per James M's tutorials, and perhaps the Task Segment Selector in the future.
 
 - **IDT** - Again just follow a tutorial, and cross-reference with other tutorials/Known Bugs as well.
 - **IRQs and PIT** - Again just follow a tutorial, and cross-reference with other tutorials/Known Bugs as well.
