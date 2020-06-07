@@ -232,7 +232,7 @@ what serial port it is, I cannot send data to it. One thing i have found is that
 running with qemu, see: [OSDev QEMU article](https://wiki.osdev.org/QEMU). Also see `man qemu` or try sending data to the COM1/SerialPortA port.Also see [this commit](https://github.com/klange/toaruos/commit/52a5b9e6cfda90108fafb3e2eba161d8b8d8e320) of toaruos
 
 ## References
-Note: At the time of writing, I have only used Dr Nicholas Blundell's tutorial, and have
+Note: At the time of writing, I have only used Dr Nicholas Blundell's and James M's tutorials, and have
 not yet incorporated all these tutorials into the OS. They do, however, represent what I plan to use as reference.
 
 - [OSDev Wiki](https://wiki.osdev.org/) - Extremely good with lots of information, but sometimes not very well-written 
@@ -278,3 +278,4 @@ really easy to understand and read OS.
 - [Raspberry Pi OS](https://github.com/s-matyukevich/raspberry-pi-os) - Actually seems like a really good guide to OSDev, although it is
 incomplete and doesn't have a tutorial on reading sectors for the SD Card or a flash drive.
 - [VGA Hardware](http://www.osdever.net/FreeVGA/vga/vgareg.htm) Some info about the VGA Hardware
+- [SkiftOS](https://github.com/maker-dev/skift) (Also: [Reddit link](https://www.reddit.com/r/osdev/comments/aazvhd/after_5_months_of_working_on_my_operating_system/)) The great thing about this is that it is MIT licensed!

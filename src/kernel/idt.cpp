@@ -1,27 +1,27 @@
 #include "idt.h"
 #include "utils.h"
-
+#include "irq.h"
 namespace{
 	os::IDT::Entry idt_entries[256];
 	os::IDT::Ptr idt_ptr;
-
-	void CreateIDTEntry(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
-		idt_entries[num].base_low 	= base & 0xFFFF;
-		idt_entries[num].base_high 	= (base >> 16) & 0xFFFF;
-		
-		idt_entries[num].sel 		= sel;
-		idt_entries[num].always0 	= 0;
-
-		// Uncomment when user-mode has been implemented
-		idt_entries[num].flags 		= flags /* | 0x60 */;		
-	}
-
 	uint8_t AccessFlag(uint8_t dpl) {
 		//DPL should only be 2 bits large
 		dpl &= 0b11;
 		return 0x8e | (dpl << 5);
 	}
 
+}
+
+
+void os::IDT::CreateIDTEntry(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags) {
+	idt_entries[num].base_low 	= base & 0xFFFF;
+	idt_entries[num].base_high 	= (base >> 16) & 0xFFFF;
+	
+	idt_entries[num].sel 		= sel;
+	idt_entries[num].always0 	= 0;
+
+	// Uncomment when user-mode has been implemented
+	idt_entries[num].flags 		= flags /* | 0x60 */;		
 }
 
 extern "C" void asm_idt_flush(uint32_t);
@@ -100,6 +100,7 @@ void os::IDT::Init(){
 	CreateIDTEntry(29, reinterpret_cast<uint32_t>(isr29), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
 	CreateIDTEntry(30, reinterpret_cast<uint32_t>(isr30), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
 	CreateIDTEntry(31, reinterpret_cast<uint32_t>(isr31), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
-
+	os::IRQ::Init();
 	asm_idt_flush(reinterpret_cast<uint32_t>(&idt_ptr));	
+	//asm volatile("sti");
 }

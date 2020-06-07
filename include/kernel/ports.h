@@ -47,6 +47,22 @@ namespace os
 			namespace FLOPPY{
 			}
 		}
+		// Helper for example Port colourIndex(0x3c8)
+		class Port {
+		private:
+			const unsigned short m_Port;
+		public:
+			// It's on the caller to make sure the right overloaded function is used
+			// eg.: unsigned int data = 0;
+			// port.Send(data);
+			// Not sure what it would automatically use, but it's on them to cast it
+			// to the right one
+			void Send(unsigned char data) const;
+			void Send(unsigned short data) const;
+			void ReadByte() const;
+			void ReadWord() const;
+			Port(const unsigned short port);
+		};
 		unsigned char in_byte(unsigned short port);
 		void out_byte(unsigned short port, unsigned char data); 
 		unsigned char in_word(unsigned short port);

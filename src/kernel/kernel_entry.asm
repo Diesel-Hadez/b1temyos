@@ -15,6 +15,7 @@ _start:
 	mov esp, stack_top
 	mov ebp, esp
 	call _init
+	sti
 	call kernel_main
 	call _fini
 	cli

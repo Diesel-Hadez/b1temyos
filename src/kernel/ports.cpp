@@ -19,3 +19,22 @@ unsigned char os::port::in_word(unsigned short port) {
 void os::port::out_word(unsigned short port, unsigned short data) {
 	__asm__("out %%ax, %%dx" : : "a" (data) , "d" (port) );
 }
+
+os::port::Port::Port(const unsigned short port): m_Port(port) {
+}
+
+void os::port::Port::Send(unsigned char data) const {
+	os::port::out_byte(m_Port, data);
+}
+
+void os::port::Port::Send(unsigned short data) const {
+	os::port::out_word(m_Port, data);
+}
+
+void os::port::Port::ReadByte() const {
+	os::port::in_byte(m_Port);
+}
+
+void os::port::Port::ReadWord() const {
+	os::port::in_word(m_Port);
+}

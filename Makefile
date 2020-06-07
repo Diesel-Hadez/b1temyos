@@ -1,4 +1,5 @@
 .DELETE_ON_ERROR:
+.DEFAULT_GOAL := all
 CC	= i686-elf-gcc
 CXX	= i686-elf-g++
 LD	= i686-elf-ld
@@ -26,11 +27,14 @@ KERNEL_CPP_FILES= kernel_main.cpp\
 		  terminal.cpp\
 		  gdt.cpp\
 		  idt.cpp\
-		  isr.cpp
+		  isr.cpp\
+		  irq.cpp\
+		  timer.cpp
 
 KERNEL_ASM_FILES= gdt_flush.asm\
 		  idt_flush.asm\
-		  isr_asm.asm
+		  isr_asm.asm\
+		  irq_asm.asm
 
 DEPS		= $(KERNEL_CPP_FILES:%.cpp=$(OBJ_PATH)/%.d)
 
@@ -93,7 +97,7 @@ rel/os-image.bin: obj/boot_sect.bin obj/kernel.bin
 image: rel/os-image.bin
 
 .PHONY: all
-all: rel/os-image.bin
+all: clean rel/os-image.bin
 
 .PHONY: run
 run: rel/os-image.bin
