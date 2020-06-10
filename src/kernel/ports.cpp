@@ -31,10 +31,10 @@ void os::port::Port::Send(unsigned short data) const {
 	os::port::out_word(m_Port, data);
 }
 
-void os::port::Port::ReadByte() const {
-	os::port::in_byte(m_Port);
+uint8_t os::port::Port::ReadByte() const {
+	return os::port::in_byte(m_Port);
 }
 
-void os::port::Port::ReadWord() const {
-	os::port::in_word(m_Port);
+uint16_t os::port::Port::ReadWord() const {
+	return os::port::in_word(m_Port);
 }

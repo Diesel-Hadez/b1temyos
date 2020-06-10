@@ -19,6 +19,8 @@ namespace os{
 			uint16_t limit;
 			uint32_t base;
 		} __attribute__((packed));
+		
+		void Flush();
 		void Init();
 		void CreateIDTEntry(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags); 
 	}

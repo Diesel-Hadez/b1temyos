@@ -59,6 +59,10 @@ extern "C" void isr29();
 extern "C" void isr30();
 extern "C" void isr31();
 
+void os::IDT::Flush() {
+	asm_idt_flush(reinterpret_cast<uint32_t>(&idt_ptr));	
+}
+
 void os::IDT::Init(){
 	static const uint16_t KERNEL_CODE_SEGMENT_SELECTOR = 0x08;
 
@@ -100,7 +104,4 @@ void os::IDT::Init(){
 	CreateIDTEntry(29, reinterpret_cast<uint32_t>(isr29), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
 	CreateIDTEntry(30, reinterpret_cast<uint32_t>(isr30), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
 	CreateIDTEntry(31, reinterpret_cast<uint32_t>(isr31), KERNEL_CODE_SEGMENT_SELECTOR, 0x8E);
-	os::IRQ::Init();
-	asm_idt_flush(reinterpret_cast<uint32_t>(&idt_ptr));	
-	//asm volatile("sti");
 }

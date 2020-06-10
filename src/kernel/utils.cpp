@@ -9,8 +9,8 @@
 //So...11 bytes
 void os::util::hex_to_str(const unsigned int num, char * ret, const bool trim) {
 	static const char *  HEX_REF = "0123456789ABCDEF";
-	os::util::memset(reinterpret_cast<byte *>(ret), 0, 11);
-	os::util::memset(reinterpret_cast<byte *>(ret), '0', 10);
+	os::util::memset(reinterpret_cast<uint8_t *>(ret), 0, 11);
+	os::util::memset(reinterpret_cast<uint8_t *>(ret), '0', 10);
 	ret[0] = '0';
 	ret[1] = 'x';
 	unsigned int write_pos = 2;
@@ -33,6 +33,9 @@ unsigned int os::util::pow(const unsigned int num, const unsigned int pow) {
 	return ret;
 }
 
+// I already fixed the bug mentioned in the below 2 lines of comments
+// If I'm not mistaken, there is a bug for conversion for multiples of 10 
+// such that the leading '1' gets cut off
 //Don't have a heap yet, so I can't return a char*
 //Because if I do, it would be a local variable for the function
 //on the stack which is removed when the function returns.
@@ -40,15 +43,15 @@ unsigned int os::util::pow(const unsigned int num, const unsigned int pow) {
 //So...11 bytes
 void os::util::int_to_str(const unsigned int num, char * ret, const bool trim) {
 	static const char * INT_REF	= "0123456789";
-	os::util::memset(reinterpret_cast<byte *>(ret), 0, 11);
-	os::util::memset(reinterpret_cast<byte *>(ret), '-', 10);
+	os::util::memset(reinterpret_cast<uint8_t *>(ret), 0, 11);
+	os::util::memset(reinterpret_cast<uint8_t *>(ret), '-', 10);
 	unsigned int write_pos=0;
 	for (int i =0; i <= 9; i++) {
 		unsigned int left 	= os::util::pow(10, 10-i);
 		unsigned int right 	= os::util::pow(10, 9-i);
 		unsigned int index 	= ((num % left) - (num % right))/right;
 		if (trim &&
-			num <= right){
+			num < right){
 			continue;
 		}
 		ret[write_pos++] = INT_REF[index];
@@ -57,10 +60,12 @@ void os::util::int_to_str(const unsigned int num, char * ret, const bool trim) {
 	ret[write_pos] = '\x00';
 }
 bool os::util::test_a20_enabled() {
-	static byte * test_memory_1 = (byte*) 0x12345;
-	static byte * test_memory_2 = (byte*) (0x12345 | 0x100000);
+	static uint8_t * test_memory_1 = (uint8_t *) 0x12345;
+	static uint8_t * test_memory_2 = (uint8_t *) (0x12345 | 0x100000);
 	// Is overwriting potentially important areas of memory just for the sake of checking if the A20
-	// line is enabled fine? Probably.
+	// line is enabled fine? Probably. Not to mention that once paging is enabled
+	// addresses 0x12345 or/and 0x112345  would probably not be mapped
+	// And even if they were, the data in there would be corrupted.
 	test_memory_1[0] = 'Z';
 	test_memory_2[0] = 'Q';
 	return test_memory_1[0] != test_memory_2[0];
@@ -106,4 +111,20 @@ unsigned int os::util::strlen(const char * str){
 	unsigned int ret=0;
 	while (str[ret] != '\x00'){ret++;}
 	return ret;
+}
+
+// Just something fun before I start working on Paging
+uint8_t os::util::ReadCMOSRegister(uint8_t reg) {
+	using namespace os::port;
+	static Port cmos(0x70);
+	static Port cmos_data(0x71);
+
+	// Status register A
+	cmos.Send(static_cast<uint8_t>(0x0a));
+	while (( cmos_data.ReadByte() & 0b10000000) != 0);
+
+	uint8_t nmi = cmos.ReadByte() & 0b10000000;
+	cmos.Send(static_cast<uint8_t>(nmi | reg));
+
+	return cmos_data.ReadByte();
 }

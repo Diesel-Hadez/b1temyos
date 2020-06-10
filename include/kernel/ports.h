@@ -1,5 +1,6 @@
 #ifndef PORTS_H
 #define PORTS_H
+#include <stdint.h>
 
 namespace os
 {
@@ -11,6 +12,11 @@ namespace os
 			namespace  DMA {
 			}
 			namespace PIC{
+				const unsigned short MASTER 		= 0x20;
+				const unsigned short SLAVE 		= 0xa0;
+
+				const unsigned short MASTER_DATA 	= MASTER + 1;
+				const unsigned short SLAVE_DATA 	= SLAVE + 1;
 			}
 			namespace PIT{
 			}
@@ -59,8 +65,8 @@ namespace os
 			// to the right one
 			void Send(unsigned char data) const;
 			void Send(unsigned short data) const;
-			void ReadByte() const;
-			void ReadWord() const;
+			uint8_t ReadByte() const;
+			uint16_t ReadWord() const;
 			Port(const unsigned short port);
 		};
 		unsigned char in_byte(unsigned short port);

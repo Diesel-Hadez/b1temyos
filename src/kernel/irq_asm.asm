@@ -3,9 +3,8 @@ KERNEL_DATA_SEGMENT_SELECTOR 	equ 0x10
 %macro IRQ 2
 [global irq%1]
 irq%1:
-	cli
 	push byte 0
-	push %2
+	push byte %2
 	jmp irq_common_stub
 %endmacro
 
@@ -25,6 +24,16 @@ IRQ 12, 44
 IRQ 13, 45
 IRQ 14, 46
 IRQ 15, 47
+
+[global asm_enable_irq]
+asm_enable_irq:
+	sti
+	ret
+
+[global asm_disable_irq]
+asm_disable_irq:
+	cli
+	ret
 
 [extern irq_handler]
 irq_common_stub:

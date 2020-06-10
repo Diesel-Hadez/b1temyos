@@ -19,19 +19,26 @@ void isr_handler(os::ISR::Registers * registers) {
 
 extern "C"
 void irq_handler(os::ISR::Registers * registers) {
-	os::Term::kprintf("IRQ received interrupt: %d\n", registers->int_no);
-	os::port::Port pic_slave(0xa0);
-	os::port::Port pic_master(0x20);
+	using namespace os::port;
+	using namespace os::port::TYPE;
+
+	Port pic_master(PIC::MASTER);
+	Port pic_slave(PIC::SLAVE);
+
+	static const unsigned short PIC_EOI = 0x20;
+
 	if (registers->int_no >= 40) {
 		//Reset
-		pic_slave.Send(static_cast<uint8_t>(0x20));
+		pic_slave.Send(static_cast<uint8_t>(PIC_EOI));
 	}
-	pic_master.Send(static_cast<uint8_t>(0x20));
+	pic_master.Send(static_cast<uint8_t>(PIC_EOI));
+
 	if (interrupt_handlers[registers->int_no] != 0){
 		isr_t handler = interrupt_handlers[registers->int_no];
 		handler(registers);
 	}
 
+	// Keyboard handler test
 	if (registers->int_no == 33) {
 		 unsigned char scan_code = os::port::in_byte(0x60);
 		 os::Term::kprintf("Scancode: %x\n", static_cast<unsigned int>(scan_code));

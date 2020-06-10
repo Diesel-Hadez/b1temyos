@@ -1,5 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
+#include <stdint.h>
 
 namespace os{
 	namespace util{
@@ -18,6 +19,8 @@ namespace os{
 				unsigned int count);
 		unsigned int strlen(const char * str);
 		unsigned int pow(const unsigned int num, const unsigned int pow);
+
+		uint8_t ReadCMOSRegister(uint8_t reg);
 	}
 }
 

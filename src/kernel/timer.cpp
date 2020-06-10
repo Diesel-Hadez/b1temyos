@@ -3,13 +3,24 @@
 #include "terminal.h"
 #include "ports.h"
 
-static unsigned int tick = 0;
+namespace{
+	unsigned int tick {0};
+	unsigned int timer_frequency {0};
+	unsigned int elapsed_seconds {0};
+}
 static void timer_callback(os::ISR::Registers * regs) {
 	tick++;
-	os::Term::kprintf("Tick: %d\n", tick);
+	// Is called 1 time per second
+	// Could also do tick % frequency == 0 if total time is needed
+	if (tick >= timer_frequency) {
+		elapsed_seconds++;
+		os::Term::kprintf("Tick: %d\n", elapsed_seconds);
+		tick = 0;
+	}
 }
 
 void os::Timer::Init(unsigned int frequency) {
+	timer_frequency = frequency;
 	os::ISR::register_interrupt_handler(os::ISR::IRQ0, &timer_callback);	
 
 	unsigned int divisor = 1193180 / frequency;

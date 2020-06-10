@@ -5,8 +5,8 @@
 
 namespace{
 	struct Cell{
-		byte character;
-		byte colour;
+		uint8_t character;
+		uint8_t colour;
 	} __attribute__((packed));
 
 	namespace COMMANDS {
@@ -25,10 +25,10 @@ namespace{
 		using namespace os::port;
 		unsigned short memory_pos = y * VGA_WIDTH + x;
 		out_byte(TYPE::VGA::COMMAND_1, COMMANDS::CURSOR_POS_LOW);
-		out_byte(TYPE::VGA::DATA_1, static_cast<byte>(memory_pos & 0xFF));
+		out_byte(TYPE::VGA::DATA_1, static_cast<uint8_t>(memory_pos & 0xFF));
 
 		out_byte(TYPE::VGA::COMMAND_1, COMMANDS::CURSOR_POS_HIGH);
-		out_byte(TYPE::VGA::DATA_1, static_cast<byte>((memory_pos >> 8) & 0xFF));
+		out_byte(TYPE::VGA::DATA_1, static_cast<uint8_t>((memory_pos >> 8) & 0xFF));
 	}
 
 	inline void enable_cursor(){

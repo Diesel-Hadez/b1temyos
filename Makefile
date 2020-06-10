@@ -29,7 +29,8 @@ KERNEL_CPP_FILES= kernel_main.cpp\
 		  idt.cpp\
 		  isr.cpp\
 		  irq.cpp\
-		  timer.cpp
+		  timer.cpp\
+		  interrupts.cpp
 
 KERNEL_ASM_FILES= gdt_flush.asm\
 		  idt_flush.asm\

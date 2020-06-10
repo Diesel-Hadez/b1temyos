@@ -3,16 +3,14 @@ KERNEL_DATA_SEGMENT_SELECTOR	equ 0x10
 %macro ISR_NOERRCODE 1
 [global isr%1]
 isr%1:
-	cli
 	push byte 0
-	push %1
+	push byte %1
 	jmp isr_common_stub
 %endmacro
 
 %macro ISR_ERRCODE 1
 [global isr%1]
 isr%1:
-	cli
 	push byte %1
 	jmp isr_common_stub
 %endmacro
