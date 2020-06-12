@@ -92,7 +92,8 @@ rel/os-image.bin: obj/boot_sect.bin obj/kernel.bin
 	cat $^ > $@
 #Qemu needs raw images (except for if=floppy) to be at least 32 sectors large
 #Shamelessly stolen from https://unix.stackexchange.com/a/196727
-	dd if=/dev/zero of=$@ bs=1 count=1 seek=$(shell expr 512 \* 32 - 1)
+# Changed to 64 sectors cause I need more space
+	dd if=/dev/zero of=$@ bs=1 count=1 seek=$(shell expr 512 \* 64 - 1)
 
 .PHONY: image
 image: rel/os-image.bin

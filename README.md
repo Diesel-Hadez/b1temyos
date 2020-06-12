@@ -279,3 +279,4 @@ really easy to understand and read OS.
 incomplete and doesn't have a tutorial on reading sectors for the SD Card or a flash drive.
 - [VGA Hardware](http://www.osdever.net/FreeVGA/vga/vgareg.htm) Some info about the VGA Hardware
 - [SkiftOS](https://github.com/maker-dev/skift) (Also: [Reddit link](https://www.reddit.com/r/osdev/comments/aazvhd/after_5_months_of_working_on_my_operating_system/)) The great thing about this is that it is MIT licensed!
+- [K-OS](https://github.com/khoek/k-os)

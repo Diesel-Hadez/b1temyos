@@ -34,6 +34,20 @@ void kernel_main(){
 
 	os::Term::ClearScreen();
 
+	// 0x4e00 is at the time of writing at 0x4000 in the os-image.bin file
+	/*volatile uint32_t* test = reinterpret_cast<uint32_t*>(0x4e00);
+	while (*test == 0xdeadbabe) {
+		test += 1;
+	}
+	os::Term::kprintf("Read: %x\n", *test);
+	os::Term::kprintf("Addr: %x\n", reinterpret_cast<uint32_t>(test));
+	*/
+
+
+	// 0xC0001000 should be mapped to the start of kernel
+	volatile uint32_t* test = reinterpret_cast<uint32_t*>(0xC0100000+0xB3);
+	os::Term::kprintf("Read: %x\n", *test);
+
 	// Since I still don't have a working heap... this is my solution
 	// I tried manually adding in a null terminator after each month (JAN\x00FEB...),
 	// but apparently that's not allowed 

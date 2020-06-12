@@ -14,13 +14,16 @@ void os::util::hex_to_str(const unsigned int num, char * ret, const bool trim) {
 	ret[0] = '0';
 	ret[1] = 'x';
 	unsigned int write_pos = 2;
+	bool leading = true;
 	for (int i=7; i >= 0;i--){
 		char result = HEX_REF[(num >> (4*i)) & 0xF];
 		if (trim && 
-			result == '0'){
+			result == '0' &&
+			leading){
 			continue;
 		}
 		ret[write_pos++]= result; 
+		leading = false;
 	}
 	ret[write_pos] = '\x00';
 }

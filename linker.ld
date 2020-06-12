@@ -5,24 +5,26 @@ ENTRY(_start)
 SECTIONS
 {
 	. = 0x1000;
-	.text BLOCK(4K) : ALIGN(4K)
+	_kernel_start = .;
+	.text ALIGN (4K) : ALIGN(4K)
 	{
 		*(.text)
 	}
 
-	.rodata BLOCK(4K) : ALIGN(4K)
+	.rodata ALIGN (4K) : ALIGN(4K)
 	{
 		*(.rodata)
 	}
 
-	.data BLOCK(4K) : ALIGN(4K)
+	.data ALIGN (4K) : ALIGN(4K)
 	{
 		*(.data)
 	}
 
-	.bss BLOCK(4K) : ALIGN(4K)
+	.bss ALIGN (4K) : ALIGN(4K)
 	{
 		*(COMMON)
 		*(.bss)
 	}
+	_kernel_end = .;
 }
