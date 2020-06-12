@@ -33,6 +33,7 @@ _start:
 	; Shamelessly stolen from https://wiki.osdev.org/Higher_Half_x86_Bare_Bones
 	; Though converted to nasm syntax
 	install_paging:
+	xchg bx, bx
 	mov [0xb8000], byte 0x41
 	mov edi, virtual_to_physical(kernel_page_table)
 	mov esi, 0
@@ -74,18 +75,19 @@ _start:
 		mov ecx, cr0
 		or ecx, 0x80010000
 	
+		xchg bx, bx
 		; Infinite loop because enabling paging breaks everything. I can only assume I didn't identity map correctly
-		jmp $
+		;jmp $
 		mov cr0, ecx
-		mov byte eax, [0xC0001000]
-		mov [0xb8000], byte eax
+		;mov byte eax, [0xC00014b2]
+		;mov [0xb8000], byte eax
 
 		;mov ecx, _continue_main
 		;jmp ecx
 		lea ecx, [_continue_main]
 		jmp ecx
 _continue_main:
-	mov [0xb8000], byte 0x43
+	;mov [0xb8000], byte 0x43
 	mov [kernel_page_directory], long 0
 	mov ecx, cr3
 	mov cr3, ecx

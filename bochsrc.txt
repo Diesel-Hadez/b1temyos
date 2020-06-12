@@ -5,5 +5,6 @@ boot: floppy, disk
 ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
 ata0-master: type=disk, path="rel/os-image.bin", mode=flat, cylinders=0, heads=16, spt=23, translation=none
 
-
+magic_break: enabled=1
+display_library: x, options="gui_debug"
 floppya: 2_88="rel/os-image.bin", status=inserted
