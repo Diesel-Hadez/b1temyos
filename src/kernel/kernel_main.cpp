@@ -45,7 +45,15 @@ void kernel_main(){
 
 
 	// 0xC0001000 should be mapped to the start of kernel
-	volatile uint32_t* test = reinterpret_cast<uint32_t*>(0xC0100000+0xB3);
+	volatile uint32_t* test = reinterpret_cast<uint32_t*>(0xC0001000);
+	unsigned int count=0;
+	while (*test == 0) {
+		test += 1;
+		if (count++ == 1000) {
+			os::Term::kprintf("Gave up\n");
+			break;
+		}
+	}
 	os::Term::kprintf("Read: %x\n", *test);
 
 	// Since I still don't have a working heap... this is my solution
