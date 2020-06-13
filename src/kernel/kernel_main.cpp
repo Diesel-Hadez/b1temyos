@@ -33,6 +33,20 @@ void kernel_main(){
 	os::Timer::Init(50);
 
 	os::Term::ClearScreen();
+	os::util::disable_a20();
+	if  (!os::util::test_a20_enabled()) {
+		os::Term::kprintf("A20 is disabled, trying to enable...\n");
+		os::util::fast_enable_a20();
+		if (os::util::test_a20_enabled()){
+			os::Term::kprintf("A20 successfully enabled\n");
+		}
+		else {
+			os::Term::kprintf("Failed to enable A20\n");
+		}
+	}
+	else {
+		os::Term::kprintf("A20 is enabled!\n");
+	}
 
 	// 0x4e00 is at the time of writing at 0x4000 in the os-image.bin file
 	/*volatile uint32_t* test = reinterpret_cast<uint32_t*>(0x4e00);
@@ -45,7 +59,7 @@ void kernel_main(){
 
 
 	// 0xC0001000 should be mapped to the start of kernel
-	volatile uint32_t* test = reinterpret_cast<uint32_t*>(0xC0001000);
+	volatile uint32_t* test = reinterpret_cast<uint32_t*>(0xC0010000);
 	unsigned int count=0;
 	while (*test == 0) {
 		test += 1;

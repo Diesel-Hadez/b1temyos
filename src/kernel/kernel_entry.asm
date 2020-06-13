@@ -44,12 +44,11 @@ _start:
 	[extern _kernel_start]
 	[extern _kernel_end]
 	a1:
-		cmp esi, virtual_to_physical(_kernel_start)
-		; the f and b is "use the label with the name which is forward or backward".
-		; I think it forces relative addressing rather than absolute
-		jl a2
-		cmp esi, virtual_to_physical(_kernel_end)
-		jge a3
+		; commented out to map everything and not just the kernel
+		;cmp esi, virtual_to_physical(_kernel_start)
+		;jl a2
+		;cmp esi, virtual_to_physical(_kernel_end)
+		;jge a3
 
 		mov edx, esi
 		; Present and writable
@@ -74,20 +73,13 @@ _start:
 
 		mov ecx, cr0
 		or ecx, 0x80010000
-	
-		xchg bx, bx
-		; Infinite loop because enabling paging breaks everything. I can only assume I didn't identity map correctly
-		;jmp $
-		mov cr0, ecx
-		;mov byte eax, [0xC00014b2]
-		;mov [0xb8000], byte eax
 
-		;mov ecx, _continue_main
-		;jmp ecx
+		mov cr0, ecx
+
 		lea ecx, [_continue_main]
 		jmp ecx
 _continue_main:
-	;mov [0xb8000], byte 0x43
+	;unload first page
 	mov [kernel_page_directory], long 0
 	mov ecx, cr3
 	mov cr3, ecx

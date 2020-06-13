@@ -1,10 +1,17 @@
-romimage: file=/usr/share/bochs/BIOS-bochs-latest, address=0xfffe0000
-vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
-boot: floppy, disk 
+# See http://bochs.sourceforge.net/doc/docbook/user/bochsrc.html
 
-ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
-ata0-master: type=disk, path="rel/os-image.bin", mode=flat, cylinders=0, heads=16, spt=23, translation=none
+romimage: file=/usr/share/bochs/BIOS-bochs-latest
+vgaromimage: file=/usr/share/bochs/VGABIOS-lgpl-latest
+boot: disk 
+ata0-master: type=disk, path="rel/os-image.img", mode=flat
+
+clock: sync=realtime
+
+# If running too slow, see
+# https://stackoverflow.com/q/45845736
+# Basically setting a CPU and settings a higher IPS (instructions per second?)
+# but keeping the clock option above
+# so it doesn't go too fast
 
 magic_break: enabled=1
 display_library: x, options="gui_debug"
-floppya: 2_88="rel/os-image.bin", status=inserted

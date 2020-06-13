@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "common.h"
 #include "ports.h"
+#include "terminal.h"
 
 //Don't have a heap yet, so I can't return a char*
 //Because if I do, it would be a local variable for the function
@@ -24,6 +25,9 @@ void os::util::hex_to_str(const unsigned int num, char * ret, const bool trim) {
 		}
 		ret[write_pos++]= result; 
 		leading = false;
+	}
+	if (write_pos == 2) {
+		ret[write_pos++] = '0';
 	}
 	ret[write_pos] = '\x00';
 }
@@ -63,15 +67,25 @@ void os::util::int_to_str(const unsigned int num, char * ret, const bool trim) {
 	ret[write_pos] = '\x00';
 }
 bool os::util::test_a20_enabled() {
-	static uint8_t * test_memory_1 = (uint8_t *) 0x12345;
-	static uint8_t * test_memory_2 = (uint8_t *) (0x12345 | 0x100000);
+	static uint8_t * test_memory_1 = (uint8_t *) 0xc0012345;
+	static uint8_t * test_memory_2 = (uint8_t *) (0xc0012345 | 0x100000);
 	// Is overwriting potentially important areas of memory just for the sake of checking if the A20
 	// line is enabled fine? Probably. Not to mention that once paging is enabled
-	// addresses 0x12345 or/and 0x112345  would probably not be mapped
+	// addresses 0xc0012345 or/and 0xc0112345  would probably not be mapped
 	// And even if they were, the data in there would be corrupted.
 	test_memory_1[0] = 'Z';
 	test_memory_2[0] = 'Q';
+
+	static uint16_t * test_memory_3 = (uint16_t *) 0xc0007dfe;
+	static uint16_t * test_memory_4 = (uint16_t *) (0xc0007dfe | 0x100000);
+	os::Term::kprintf("%x vs %x\n", *test_memory_3, *test_memory_4);
 	return test_memory_1[0] != test_memory_2[0];
+}
+
+// For testing
+void os::util::disable_a20() {
+	using namespace os::port;
+	out_byte(0xee,0x00);
 }
 
 //Unable to test this

@@ -86,23 +86,28 @@ obj/boot_sect.bin: $(addprefix $(BOOT_PATH), $(BOOT_FILES))
 	-@mkdir -p obj
 	$(NASM) -I src/boot $< -f bin -o $@
 
-rel/os-image.bin: obj/boot_sect.bin obj/kernel.bin
+rel/os-image.img: obj/boot_sect.bin obj/kernel.bin
 	-@mkdir -p rel
 #Concatenate the files into one raw image
 	cat $^ > $@
-#Qemu needs raw images (except for if=floppy) to be at least 32 sectors large
-#Shamelessly stolen from https://unix.stackexchange.com/a/196727
-# Changed to 64 sectors cause I need more space
-	dd if=/dev/zero of=$@ bs=1 count=1 seek=$(shell expr 512 \* 64 - 1)
+# Qemu needs raw images (except for if=floppy) to be at least 32 sectors large
+# Bochs needs raw images to be at least 10MB large
+# Shamelessly stolen from https://unix.stackexchange.com/a/196727
+# CHS 20_16_63
+# 20160 (20*16*63) sectors should be rougly 10MB
+# This specific CHS was chosen because it's the size which is automatically generated
+# by Boch's 'bximage' utility for a 10MB raw image file, beats me as to why bximage's
+# authors chose it.
+	dd if=/dev/zero of=$@ bs=1 count=1 seek=$(shell expr 20 \* 16 \* 63 \* 512 - 1)
 
 .PHONY: image
-image: rel/os-image.bin
+image: rel/os-image.img
 
 .PHONY: all
-all: clean rel/os-image.bin
+all: clean rel/os-image.img
 
 .PHONY: run
-run: rel/os-image.bin
+run: rel/os-image.img
 	$(QEMU) -drive if=ide,format=raw,file=$<
 
 .PHONY: clean

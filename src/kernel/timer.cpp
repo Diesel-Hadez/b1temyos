@@ -20,6 +20,9 @@ static void timer_callback(os::ISR::Registers * regs) {
 }
 
 void os::Timer::Init(unsigned int frequency) {
+	// Bochs doesn't set tick to 0 for some reason even though
+	// I initialised it
+	tick = 0;
 	timer_frequency = frequency;
 	os::ISR::register_interrupt_handler(os::ISR::IRQ0, &timer_callback);	
 

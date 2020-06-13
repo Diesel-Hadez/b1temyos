@@ -6,6 +6,7 @@ namespace os{
 	namespace util{
 		void hex_to_str(const unsigned int num, char * ret, const bool trim=true);
 		void int_to_str(const unsigned int num, char * ret, const bool trim=true);
+		void disable_a20();
 		bool test_a20_enabled();
 		void fast_enable_a20();
 		void memcpy(unsigned char * data, 

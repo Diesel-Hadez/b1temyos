@@ -4,7 +4,7 @@ ENTRY(_start)
 
 SECTIONS
 {
-	. = 0xC0001000;
+	. = 0xC0010000;
 	_kernel_start = .;
 	.text ALIGN (4K) : AT (ADDR (.text) - 0xC0000000)
 	{
