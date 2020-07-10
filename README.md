@@ -309,8 +309,7 @@ To do this, maybe implement a custom syscall for executing a file.
 - A good Heap implementation - Although James M's tutorial covers this, the wiki states it is not a terribly good solution and suggests
 implementing one yourself, which I currently find somewhat difficult.
 - Usermode - Although James M's tutorial covers this, I have slight doubts in my ability to implement this as well- although hopefully
-if I get a working Heap this may be easier. Little OS Book does cover this though, so I might be able to do so, I do not want a monolithic
-kernel and would rather a microkernel after all.
+if I get a working Heap this may be easier. Little OS Book does cover this though, so I might be able to do so.
 - Graphics Driver - Hah I'll never get to this, not even in 10 years. To an ambitious reader, all I have to say is: Good luck.
 Maybe PDoane's OS Source code would be on interest to you. Actually, try SkiftOS's source code. look at "kernel/devices/BGA.c" and look at 
 [the BGA](https://wiki.osdev.org/Bochs_VBE_Extensions) to try and get a linear framebuffer, though this probably would be inefficient 
@@ -337,7 +336,7 @@ that I do not want to risk messing up my hardware.
 which I assume is a process somewhat similar to an Arduino sending data over a Serial Port, but for the life of me I can not find out 
 how to implement this. I know the little os book (linked in the references) has a chapter on serial communication, but without knowing 
 what serial port it is, I cannot send data to it. One thing i have found is that you probably need to use the option `-serial stdio` when
-running with qemu, see: [OSDev QEMU article](https://wiki.osdev.org/QEMU). Also see `man qemu` or try sending data to the 
+running with qemu, see: [OSDev QEMU article](https://wiki.osdev.org/QEMU). Also see `man qemu` or try sending data to ahe 
 COM1/SerialPortA port.Also see [this commit](https://github.com/klange/toaruos/commit/52a5b9e6cfda90108fafb3e2eba161d8b8d8e320) of toaruos
 
 ## References
@@ -352,7 +351,7 @@ following, also note that some of these tutorials have pages in the OSdev wiki d
 	- [Writing an Operating System - From Scratch by Dr Nicholas Blundell](https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf) - Incomplete but extremely well-written. An excellent start to writing a bootloader.
 	- [James A Molloy's Kernel Tutorials](http://jamesmolloy.co.uk/tutorial_html/) | [Known Bugs](https://wiki.osdev.org/James_Molloy%27s_Tutorial_Known_Bugs)
 	- [BrokenThorn Operating System Development Series](http://www.brokenthorn.com/Resources/OSDevIndex.html) | [Known Bugs](https://wiki.osdev.org/Brokenthorn%27s_Known_Bugs)
-	- [Bran's Kernel Tutorial](http://www.osdever.net/bkerndev/Docs/title.htm) | [Known Bugs](https://wiki.osdev.org/Bran%27s_Known_Bugs)
+	- [Bran's Kernel Tutorial](https://web.archive.org/web/2019*/http://www.osdever.net/bkerndev/Docs/title.htm) | [Known Bugs](https://wiki.osdev.org/Bran%27s_Known_Bugs) - EDIT: Just abandoned a few weeks ago as of time of writing, changed to an archived link instead.
 - [Writing an OS in Rust](https://os.phil-opp.com/) despite being in Rust and being incomplete as of time of writing, 
 this still is an invaluable resource, and also is probably the most up-to-date tutorial on Operating Systems there 
 is available for free online.
