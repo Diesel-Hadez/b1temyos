@@ -69,7 +69,9 @@ isr_common_stub:
 	mov gs, ax
 	push esp	; pointer to these registers
 	
-	; Unsure what this is for actually
+	; Purpose of cld :-
+	; C code following the sysV ABI requires DF to be clear on function entry (achieved through cld instruction)
+	; Src: https://wiki.osdev.org/Interrupt_Service_Routines#Two-Stage_Assembly_Wrapping
 	cld 		
 	call isr_handler
 
