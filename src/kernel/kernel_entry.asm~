@@ -59,8 +59,6 @@ _start:
 		; 1MiB Kernel Heap
 		; Probably not enough, expand in the future.
 		; Address depends on how large the OS currently is, get the address with _kheap_start
-		cmp esi, virtual_to_physical(_heap_start)
-		jge a4
 		cmp esi, virtual_to_physical(_heap_start + 0x100000)
 		jge a3
 
@@ -69,7 +67,7 @@ _start:
 		jl a2
 		cmp esi, virtual_to_physical(_kernel_end)
 		jge a2
-	a4:
+
 		mov edx, esi
 		; Present and writable
 		or edx, 0x03

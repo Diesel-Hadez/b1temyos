@@ -412,4 +412,3 @@ incomplete and doesn't have a tutorial on reading sectors for the SD Card or a f
 Also: [Reddit link](https://www.reddit.com/r/osdev/comments/aazvhd/after_5_months_of_working_on_my_operating_system/)) 
 The great thing about this is that it is MIT licensed!
 - [K-OS](https://github.com/khoek/k-os)
-- [xv6 os](https://github.com/mit-pdos/xv6-public) In C code (and a separate repository linked in their readme is risc-v), i think it's in long mode and doesn't use paging though. See the Notes file in the repo.

@@ -3,7 +3,6 @@
 #include "ports.h"
 #include "terminal.h"
 
-// Only for the current kernel page directory setup
 size_t os::util::virtual_to_physical(const size_t address) {
 	return address-0xC0000000;
 }

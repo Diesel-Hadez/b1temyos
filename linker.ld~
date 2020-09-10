@@ -33,5 +33,5 @@ SECTIONS
 
 	. = ALIGN (4K);
 	/* https://stackoverflow.com/a/50612846 */
-	_heap_start = .;
+	_kheap_start = .;
 }

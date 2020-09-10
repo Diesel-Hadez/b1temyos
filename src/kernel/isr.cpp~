@@ -18,9 +18,7 @@ void isr_handler(os::ISR::Registers * registers) {
 
 	// Paging
 	if (registers->int_no == 14) {
-		os::Term::kprintf("PAGING FAULT, PLEASE RESTART");
-		// So that tick stops happening
-		asm("cli");
+		os::Term::kprintf("PAGING FAULT");
 		while (true);
 	}
 }

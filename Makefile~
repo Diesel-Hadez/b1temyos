@@ -31,8 +31,7 @@ KERNEL_CPP_FILES= kernel_main.cpp\
 		  irq.cpp\
 		  timer.cpp\
 		  interrupts.cpp\
-		  kheap.cpp\
-		  paging.cpp
+		  kheap.cpp
 
 KERNEL_ASM_FILES= gdt_flush.asm\
 		  idt_flush.asm\

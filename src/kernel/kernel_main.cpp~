@@ -67,7 +67,7 @@ void kernel_main(){
 			pd.MapPage(one, two);
 			i += 0x1000;
 		}
-		//SwitchPageDirectory(pd);
+		SwitchPageDirectory(pd);
 		//Reload();
 	}
 	// 0xC0010000 should be mapped to the start of kernel

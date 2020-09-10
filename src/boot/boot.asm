@@ -6,22 +6,25 @@
 ; from linker.ld
 
 ; Disregard the following as I just moved my kernel to 0x10000 instead of 0x1000
-; 56 is the max as otherwise it would overwrite currently executing code
-; Huh. I guess that's why other kernels online mostly load their kernel to 0x100000 or 0x10000 instead of 0x1000
-; Also GRUB uses 1 MiB
+; <DISREGARD>
+; 56 SECTORS_TO_LOAD is the max as otherwise it would overwrite currently executing code
+; Huh. I guess that's why other bootloaders online mostly load their kernel to 0x100000 or 0x10000 instead of 0x1000
+; For eg: GRUB uses 1 MiB
 ; I wonder why the Writing your own Operating System from Scratch book uses 0x1000 then.
+; </DISREGARD>
 
 KERNEL_OFFSET 		equ 	0x10000
 BYTES_PER_SECTOR	equ 	0x200
 SECTORS_TO_LOAD		equ 	63
 BOOTLOADER_OFFSET	equ 	0x7c00
-
+STACK_START		equ     0x8000	; Note that even though it's close to BOOTLOADER_OFFSET, the bootloader is only 0x200
+					; bytes anyway so it won't interfere with each other.
 
 start:
 	mov [BOOT_DRIVE], dl ; Initially dl is set to the BOOT_DRIVE
 
-	; This gives us about 512 bytes of safe stack space
-	mov bp, 0x8000
+	; This gives us about KERNEL_OFFFSET-STACK_START bytes of safe stack space
+	mov bp, STACK_START
 	mov sp, bp
 
 	call clear_screen
@@ -67,6 +70,8 @@ load_kernel:
 	; actually it's probably more clear if I do it like this
 	; actually now that I moved the kernel from 0x1000 to 0x10000 I don't need this
 	; I still should be careful of bx reaching 0xFE00 though since then I'll need to modify ES
+	; (Since 0xFE00 + 0x200 is more than the 16 bit bx register can handle and it'll wrap around to 0x0100 
+	; and probably overwrite existing code)
 	;cmp bx, BOOTLOADER_OFFSET
 	;jne .kernel_load
 	ret
