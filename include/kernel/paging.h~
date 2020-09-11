@@ -73,7 +73,7 @@ namespace os {
 		class PageDirectory {
 			friend void os::paging::SwitchPageDirectory(const PageDirectory&);
 			private:
-				// Pointer to array of tables
+				// array of pointers to tables
 				PageTable * tables[1024];
 				// Used for cr0
 				size_t m_PhysicalTables[1024];

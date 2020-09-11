@@ -16,15 +16,23 @@ size_t os::paging::MemoryAddress::GetAddress() const {
 }
 
 
+extern "C" os::paging::PageEntry kernel_page_directory[1024];
 os::paging::MemoryAddress::~MemoryAddress(){};
 void os::paging::SwitchPageDirectory(const PageDirectory &pd) {
 // From JamesM tutorial
 
 // I hope it makes a deep copy *shrug*
 // Otherwise I could probably overload the copy assignment operator.
+// or maybe a move or a shared pointer?
 // And then probably follow rule of three
    current_directory = pd;
-   asm volatile("mov %0, %%cr3":: "r"(&pd.m_PhysicalTables));
+   os::Term::kprintf("Dump &kernel_page_directory: %x\n", 
+		   os::util::virtual_to_physical(reinterpret_cast<size_t>(&kernel_page_directory)));
+   os::Term::kprintf("Dump &pd.m_PhysicalTables: %x\n", 
+		   os::util::virtual_to_physical(reinterpret_cast<size_t>(&pd.m_PhysicalTables)));
+   asm volatile ("xchgw %bx, %bx");
+   asm volatile("mov %0, %%cr3":: "r"(os::util::virtual_to_physical(reinterpret_cast<size_t>(&pd.m_PhysicalTables))));
+ //  asm volatile("mov %0, %%cr3":: "r"(os::util::virtual_to_physical(reinterpret_cast<size_t>(&kernel_page_directory))));
    uint32_t cr0;
    asm volatile("mov %%cr0, %0": "=r"(cr0));
    cr0 |= 0x80010000; // Enable paging and write protect!
@@ -69,6 +77,7 @@ os::paging::PageAlignedAddress::PageAlignedAddress(size_t addr) : MemoryAddress(
 		// Exceptions currently not available
 	//	throw PageStatus::NOT_PAGE_ALIGNED;
 	}
+	m_Address = addr;
 }
 
 os::paging::PageDirectory::PageDirectory() {
@@ -81,11 +90,18 @@ PageStatus os::paging::PageDirectory::MapPage(const PageAlignedAddress &physical
 	static constexpr int READ_WRITE_BIT 	= 0x02;
 	const size_t nVirtualAddress 	= virtual_addr.GetAddress();
 	const size_t nPhysicalAddress 	= physical_addr.GetAddress();
+	os::Term::kprintf("nVirtualAddress: %x\n", nVirtualAddress);
+	os::Term::kprintf("nPhysicalAddress: %x\n", nPhysicalAddress);
 
 	const size_t index_1 	= nVirtualAddress >> 22;
-	const size_t index_2 	= ((nVirtualAddress >> 22) << 22) >> 12;
+	const size_t index_2 	= (nVirtualAddress & 0b0000'0000'0011'1111'1111'0000'0000'0000) >> 12;
+	os::Term::kprintf("index_1: %x\n", index_1);
+	os::Term::kprintf("index_2: %x\n", index_2);
+	//os::util::memcpy(reinterpret_cast<unsigned char *>(&m_PhysicalTables), reinterpret_cast<unsigned char*>(&kernel_page_directory), sizeof(PageEntry)*1024);
+	   m_PhysicalTables[768] = 0x25023;// reinterpret_cast<size_t>(kernel_page_directory[768].frame) | 0x03;
+	   return PageStatus::OK;
 
-	os::Term::kprintf("sizeof(PageTable): %x\n", static_cast<unsigned int>(sizeof(PageTable)));
+	//os::Term::kprintf("sizeof(PageTable): %x\n", static_cast<unsigned int>(sizeof(PageTable)));
 	// If my badly designed free was ever used, this may fail
 	if (tables[index_1] == 0) {
 		os::Term::kprintf("Mapping a page...\n");
@@ -98,11 +114,11 @@ PageStatus os::paging::PageDirectory::MapPage(const PageAlignedAddress &physical
 		os::Term::kprintf("sizeof(*tables[index_1]): %x\n", static_cast<unsigned int>(sizeof(*tables[index_1])));
 	}
 	tables[index_1]->pages[index_2].frame = 0;
-	while(true);
+
 	tables[index_1]->pages[index_2].frame = nPhysicalAddress >> 12;
 	tables[index_1]->pages[index_2].present = 1;
 	tables[index_1]->pages[index_2].rw 	= 1;
-	m_PhysicalTables[index_1] = os::util::virtual_to_physical(reinterpret_cast<size_t>(&tables[index_2])) | (PRESENT_BIT | READ_WRITE_BIT);
+	m_PhysicalTables[index_1] = os::util::virtual_to_physical(reinterpret_cast<size_t>(tables[index_1])) | (PRESENT_BIT | READ_WRITE_BIT);
 	return PageStatus::OK;
 }
 

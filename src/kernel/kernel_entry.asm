@@ -15,8 +15,10 @@ KERNEL_ENTRY_POINT equ 0xC0000000
 
 section .bss
 align 16
+
+; Increased from 32 KiB to 64KiB because it was getting dangerously close to 0x10000 physical
 stack_bottom:
-	resb 32768	;	32 KiB
+	resb 65536 ;	64 KiB
 stack_top:
 
 ; Testing Higher Half Kernel
@@ -58,7 +60,7 @@ _start:
 
 		; 1MiB Kernel Heap
 		; Probably not enough, expand in the future.
-		; Address depends on how large the OS currently is, get the address with _kheap_start
+		; Address depends on how large the OS currently is, get the address with _heap_start
 		cmp esi, virtual_to_physical(_heap_start)
 		jge a4
 		cmp esi, virtual_to_physical(_heap_start + 0x100000)

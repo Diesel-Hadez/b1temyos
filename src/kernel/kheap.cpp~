@@ -14,14 +14,13 @@ namespace {
 // 
 size_t os::kheap::kmalloc(size_t size, bool page_align) {
 	if (placement_address == 0) {
-		placement_address = &_heap_start;
+		placement_address =reinterpret_cast<unsigned int>(&_heap_start);
 	}
 	if (page_align && (placement_address & 0x00000FFF != 0)) {
 		placement_address += 0x1000;
 		placement_address &= 0xFFFFF000;
 	}
 	size_t ret = placement_address;
-	os::Term::kprintf("ret is %x\n", reinterpret_cast<unsigned int>(&_heap_start));
 	placement_address += size;
 	return ret;
 }

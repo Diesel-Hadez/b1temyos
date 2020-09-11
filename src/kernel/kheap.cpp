@@ -15,6 +15,7 @@ namespace {
 size_t os::kheap::kmalloc(size_t size, bool page_align) {
 	if (placement_address == 0) {
 		placement_address =reinterpret_cast<unsigned int>(&_heap_start);
+		os::Term::kprintf("_heap_start: %x\n", reinterpret_cast<unsigned int>(&_heap_start));
 	}
 	if (page_align && (placement_address & 0x00000FFF != 0)) {
 		placement_address += 0x1000;

@@ -5,6 +5,7 @@
 #include "terminal.h"
 #include "timer.h"
 #include "paging.h"
+#include "kheap.h"
 
 typedef void (*Destructor)();
 // If I'm not mistaken the standard says 32?
@@ -59,16 +60,28 @@ void kernel_main(){
 
 	{
 		using namespace os::paging;
-		PageDirectory pd;
+		PageDirectory * pd = reinterpret_cast<PageDirectory*>(os::kheap::kmalloc(sizeof(PageDirectory), true));
 		size_t i = 0x10000;
-		while (i < 0x50000){
+		while (i < 0x100000){
 			PageAlignedAddress one(i);
 			PageAlignedAddress two(i+0xC0000000);
-			pd.MapPage(one, two);
+			pd->MapPage(one, two);
 			i += 0x1000;
 		}
-		SwitchPageDirectory(pd);
-		//Reload();
+		size_t physical = 0xb8000;
+		i = 0;
+		while (i < 0x9000) {
+			PageAlignedAddress one(physical+i);
+			PageAlignedAddress two(0xC03FF000+i);
+			pd->MapPage(one, two);
+			i += 0x1000;
+		}
+		SwitchPageDirectory(*pd);
+		while(true);
+		Reload();
+		// pd goes out of scope and that _may_ cause some problems, but since free()
+		// and the heap isn't implemented yet, maybe it'll be fine.
+		while (true);
 	}
 	// 0xC0010000 should be mapped to the start of kernel
 

@@ -15,7 +15,7 @@ namespace os {
 			uint32_t frame		: 20;
 		};
 		
-		struct PageTable {
+		struct alignas(4096) PageTable {
 			PageEntry pages[1024];
 		};
 
